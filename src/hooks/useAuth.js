@@ -28,6 +28,14 @@ export function AuthProvider({ children }) {
   async function signIn(email, password) {
     if (!isSupabaseConfigured()) return { error: { message: 'Supabase not configured' } };
     const { error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error && error.message === 'Invalid login credentials') {
+      // Try signing up if login fails (first-time use)
+      const { error: signUpError } = await supabase.auth.signUp({ email, password });
+      if (signUpError) return { error: signUpError };
+      // Try signing in again after signup
+      const { error: retryError } = await supabase.auth.signInWithPassword({ email, password });
+      return { error: retryError };
+    }
     return { error };
   }
 
