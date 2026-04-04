@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Library, Search, X, PlayCircle, ArrowLeft, ExternalLink, Target, Zap, Award } from 'lucide-react';
 import { EXERCISES, MUSCLE_GROUPS, EQUIPMENT_TYPES, DIFFICULTY_LEVELS } from '../data/exerciseLibrary';
+import MuscleDiagram, { MuscleDiagramLegend } from './MuscleDiagram';
 
 const DIFFICULTY_COLORS = {
   'Beginner': 'bg-green-100 text-green-700 border-green-200',
@@ -73,8 +74,15 @@ export default function ExerciseLibrary() {
             </a>
           </div>
 
+          {/* Muscle Diagram */}
+          <div className="mt-6 mb-6 bg-gray-50 rounded-lg p-5 border border-gray-200">
+            <h3 className="text-sm font-semibold text-gray-700 mb-3 text-center">Muscles Worked</h3>
+            <MuscleDiagram primary={selected.muscleGroup} secondary={selected.secondary || []} size="md" />
+            <MuscleDiagramLegend />
+          </div>
+
           {/* Suggested sets/reps */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-6 mb-6">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-6">
             <div className="bg-blue-50 rounded-lg p-3 text-center">
               <div className="text-xl font-bold text-blue-700">{selected.sets}</div>
               <div className="text-xs text-blue-600">Sets</div>

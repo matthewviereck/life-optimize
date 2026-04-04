@@ -3,6 +3,7 @@ import { ClipboardList, ArrowLeft, Clock, Calendar, Dumbbell, PlayCircle, Extern
 import { WORKOUT_PROGRAMS, PROGRAM_CATEGORIES } from '../data/workoutPrograms';
 import { getExerciseById } from '../data/exerciseLibrary';
 import { todayStr, generateId } from '../data/constants';
+import MuscleDiagram, { MuscleDiagramLegend } from './MuscleDiagram';
 
 const LEVEL_COLORS = {
   'Beginner': 'bg-green-100 text-green-700 border-green-200',
@@ -50,6 +51,10 @@ export default function WorkoutPrograms({ setWorkouts }) {
   // Program detail view
   if (selected) {
     const exercises = selected.exercises.map(e => ({ ...e, exercise: getExerciseById(e.id) })).filter(e => e.exercise);
+
+    // Compute all muscles worked across the program
+    const primaryMuscles = [...new Set(exercises.map(e => e.exercise.muscleGroup))];
+    const secondaryMuscles = [...new Set(exercises.flatMap(e => e.exercise.secondary || []))];
 
     return (
       <div className="space-y-6">
@@ -99,6 +104,21 @@ export default function WorkoutPrograms({ setWorkouts }) {
               <Dumbbell className="w-5 h-5 text-gray-600 mx-auto mb-1" />
               <div className="text-sm font-bold text-gray-700">{selected.equipment}</div>
               <div className="text-xs text-gray-500">Equipment</div>
+            </div>
+          </div>
+
+          {/* Muscles Worked Summary */}
+          <div className="mb-6 bg-gray-50 rounded-lg p-5 border border-gray-200">
+            <h3 className="text-sm font-semibold text-gray-700 mb-3 text-center">Muscles Worked in This Program</h3>
+            <MuscleDiagram
+              primary={primaryMuscles[0]}
+              secondary={[...primaryMuscles.slice(1), ...secondaryMuscles]}
+              size="md"
+            />
+            <MuscleDiagramLegend />
+            <div className="text-center text-xs text-gray-500 mt-3">
+              Targets: <strong>{primaryMuscles.join(', ')}</strong>
+              {secondaryMuscles.length > 0 && <span> · Assists: {secondaryMuscles.join(', ')}</span>}
             </div>
           </div>
 
