@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { LayoutDashboard, Scale, UtensilsCrossed, Dumbbell, Ruler, ChefHat, Moon, Droplets, Heart, Zap, ListChecks, Pill, Upload, Timer, Menu, X, LogOut, Loader2 } from 'lucide-react';
+import { LayoutDashboard, Scale, UtensilsCrossed, Dumbbell, Ruler, ChefHat, Moon, Droplets, Heart, Zap, ListChecks, Pill, Upload, Timer, Menu, X, LogOut, Loader2, Library, ClipboardList } from 'lucide-react';
 import { useAuth } from './hooks/useAuth';
 import { useSupabaseArray } from './hooks/useSupabaseArray';
 import { useSupabaseDateMap } from './hooks/useSupabaseDateMap';
@@ -19,6 +19,8 @@ import HabitsTracker from './components/HabitsTracker';
 import SupplementLog from './components/SupplementLog';
 import DataImport from './components/DataImport';
 import FastingTracker from './components/FastingTracker';
+import ExerciseLibrary from './components/ExerciseLibrary';
+import WorkoutPrograms from './components/WorkoutPrograms';
 
 const NAV_SECTIONS = [
   {
@@ -35,6 +37,8 @@ const NAV_SECTIONS = [
       { id: 'meals', label: 'Meal Ideas', icon: ChefHat },
       { id: 'fasting', label: 'Fasting', icon: Timer },
       { id: 'workout', label: 'Workouts', icon: Dumbbell },
+      { id: 'programs', label: 'Programs', icon: ClipboardList },
+      { id: 'exercises', label: 'Exercises', icon: Library },
       { id: 'measurements', label: 'Measurements', icon: Ruler },
     ],
   },
@@ -169,6 +173,8 @@ function AppContent({ userId }) {
           {activeTab === 'meals' && <MealIdeas setFoodLog={setFoodLog} />}
           {activeTab === 'fasting' && <FastingTracker fastingLog={fastingLog} setFastingLog={setFastingLog} />}
           {activeTab === 'workout' && <WorkoutLog workouts={workouts} setWorkouts={setWorkouts} checklist={checklist} setChecklist={setChecklist} />}
+          {activeTab === 'programs' && <WorkoutPrograms setWorkouts={setWorkouts} />}
+          {activeTab === 'exercises' && <ExerciseLibrary />}
           {activeTab === 'measurements' && <Measurements measurements={measurements} setMeasurements={setMeasurements} />}
           {activeTab === 'sleep' && <SleepLog sleepLog={sleepLog} setSleepLog={setSleepLog} />}
           {activeTab === 'hydration' && <HydrationLog hydration={hydration} setHydration={setHydration} />}
