@@ -69,8 +69,17 @@ function formatDuration(ms) {
   return { h, m, s, display: `${h}h ${m}m ${s}s` };
 }
 
+// Build a datetime-local string for the current time
+function nowLocal() {
+  const d = new Date();
+  const pad = (n) => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+
 export default function FastingTracker({ fastingLog, setFastingLog }) {
   const [now, setNow] = useState(Date.now());
+  const [showCustomStart, setShowCustomStart] = useState(false);
+  const [customStartTime, setCustomStartTime] = useState(nowLocal());
 
   const activeFast = fastingLog.find(f => f.active);
   const pastFasts = fastingLog.filter(f => !f.active).sort((a, b) => b.startTime - a.startTime);
@@ -81,15 +90,26 @@ export default function FastingTracker({ fastingLog, setFastingLog }) {
     return () => clearInterval(interval);
   }, [activeFast]);
 
-  function startFast() {
+  function startFast(startTimestamp = Date.now()) {
     setFastingLog(prev => [...prev, {
       id: generateId(),
-      startTime: Date.now(),
+      startTime: startTimestamp,
       endTime: null,
       active: true,
       targetHours: 16,
       notes: '',
     }]);
+    setShowCustomStart(false);
+  }
+
+  function startFastFromCustom() {
+    const ts = new Date(customStartTime).getTime();
+    if (isNaN(ts)) return;
+    if (ts > Date.now()) {
+      alert('Start time cannot be in the future.');
+      return;
+    }
+    startFast(ts);
   }
 
   function endFast() {
@@ -105,6 +125,13 @@ export default function FastingTracker({ fastingLog, setFastingLog }) {
   function setTarget(hours) {
     setFastingLog(prev => prev.map(f =>
       f.active ? { ...f, targetHours: hours } : f
+    ));
+  }
+
+  function updateStartTime(newTimestamp) {
+    if (isNaN(newTimestamp) || newTimestamp > Date.now()) return;
+    setFastingLog(prev => prev.map(f =>
+      f.active ? { ...f, startTime: newTimestamp } : f
     ));
   }
 
@@ -129,12 +156,27 @@ export default function FastingTracker({ fastingLog, setFastingLog }) {
       {/* Active Fast or Start Button */}
       {activeFast ? (
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-          <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center justify-between mb-6 gap-3 flex-wrap">
             <div>
               <h3 className="font-semibold text-lg">Fasting In Progress</h3>
-              <p className="text-sm text-gray-500">
-                Started: {new Date(activeFast.startTime).toLocaleString()}
-              </p>
+              <div className="flex items-center gap-2 mt-1">
+                <p className="text-sm text-gray-500">
+                  Started: {new Date(activeFast.startTime).toLocaleString()}
+                </p>
+                <button onClick={() => {
+                  const d = new Date(activeFast.startTime);
+                  const pad = (n) => String(n).padStart(2, '0');
+                  const current = `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+                  const input = prompt('Change start time (YYYY-MM-DDTHH:MM):', current);
+                  if (input) {
+                    const ts = new Date(input).getTime();
+                    if (!isNaN(ts)) updateStartTime(ts);
+                  }
+                }}
+                  className="text-xs text-amber-600 hover:text-amber-800 underline">
+                  edit
+                </button>
+              </div>
             </div>
             <button onClick={endFast}
               className="bg-red-500 text-white rounded-lg px-5 py-2.5 font-medium hover:bg-red-600 flex items-center gap-2">
@@ -244,10 +286,47 @@ export default function FastingTracker({ fastingLog, setFastingLog }) {
             Track your fasting window and see what's happening in your body at each stage.
             Most benefits begin at 12-16 hours.
           </p>
-          <button onClick={startFast}
-            className="bg-amber-500 text-white rounded-xl px-8 py-3 font-semibold text-lg hover:bg-amber-600 flex items-center gap-2 mx-auto">
-            <Play className="w-5 h-5" /> Start Fasting
-          </button>
+          {!showCustomStart ? (
+            <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
+              <button onClick={() => startFast()}
+                className="bg-amber-500 text-white rounded-xl px-8 py-3 font-semibold text-lg hover:bg-amber-600 flex items-center gap-2">
+                <Play className="w-5 h-5" /> Start Now
+              </button>
+              <button onClick={() => { setCustomStartTime(nowLocal()); setShowCustomStart(true); }}
+                className="bg-white text-amber-700 border border-amber-300 rounded-xl px-6 py-3 font-medium hover:bg-amber-50 flex items-center gap-2">
+                <Clock className="w-4 h-4" /> Start from earlier time
+              </button>
+            </div>
+          ) : (
+            <div className="max-w-md mx-auto bg-amber-50 border border-amber-200 rounded-xl p-5">
+              <label className="block text-sm font-medium text-amber-800 mb-2">
+                When did you actually start fasting?
+              </label>
+              <input type="datetime-local" value={customStartTime}
+                onChange={e => setCustomStartTime(e.target.value)}
+                max={nowLocal()}
+                className="w-full border border-amber-300 rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-amber-500 focus:border-amber-500 bg-white" />
+              <p className="text-xs text-amber-700 mt-2">
+                {(() => {
+                  const ts = new Date(customStartTime).getTime();
+                  if (isNaN(ts)) return '';
+                  const hrsAgo = (Date.now() - ts) / 3600000;
+                  if (hrsAgo < 0) return 'Time is in the future';
+                  return `That was ${hrsAgo.toFixed(1)} hours ago`;
+                })()}
+              </p>
+              <div className="flex gap-2 mt-4">
+                <button onClick={startFastFromCustom}
+                  className="flex-1 bg-amber-500 text-white rounded-lg px-4 py-2.5 font-medium hover:bg-amber-600 flex items-center justify-center gap-2">
+                  <Play className="w-4 h-4" /> Start Fast
+                </button>
+                <button onClick={() => setShowCustomStart(false)}
+                  className="px-4 py-2.5 text-amber-700 hover:bg-amber-100 rounded-lg font-medium">
+                  Cancel
+                </button>
+              </div>
+            </div>
+          )}
           <div className="mt-6 grid grid-cols-3 gap-4 max-w-lg mx-auto text-center">
             <div>
               <div className="text-lg font-bold text-green-600">12h</div>
