@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Library, Search, X, PlayCircle, ArrowLeft, ExternalLink, Target, Zap, Award } from 'lucide-react';
-import { EXERCISES, MUSCLE_GROUPS, EQUIPMENT_TYPES, DIFFICULTY_LEVELS } from '../data/exerciseLibrary';
+import { EXERCISES, MUSCLE_GROUPS, EQUIPMENT_TYPES, DIFFICULTY_LEVELS, getEmbedUrl } from '../data/exerciseLibrary';
 import MuscleDiagram, { MuscleDiagramLegend } from './MuscleDiagram';
 
 const DIFFICULTY_COLORS = {
@@ -69,10 +69,28 @@ export default function ExerciseLibrary() {
             </div>
             <a href={selected.videoUrl} target="_blank" rel="noopener noreferrer"
               className="bg-red-600 text-white rounded-lg px-4 py-2.5 font-medium hover:bg-red-700 flex items-center gap-2 shrink-0">
-              <PlayCircle className="w-5 h-5" /> Watch Demo
+              <PlayCircle className="w-5 h-5" /> Open on YouTube
               <ExternalLink className="w-3 h-3" />
             </a>
           </div>
+
+          {/* Embedded Video */}
+          {(() => {
+            const embed = getEmbedUrl(selected.id);
+            return embed ? (
+              <div className="mt-4 mb-6 rounded-xl overflow-hidden border border-gray-200 bg-black">
+                <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
+                  <iframe
+                    src={embed}
+                    title={`${selected.name} demo`}
+                    className="absolute inset-0 w-full h-full"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  />
+                </div>
+              </div>
+            ) : null;
+          })()}
 
           {/* Muscle Diagram */}
           <div className="mt-6 mb-6 bg-gray-50 rounded-lg p-5 border border-gray-200">

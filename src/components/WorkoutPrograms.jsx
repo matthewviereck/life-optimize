@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { ClipboardList, ArrowLeft, Clock, Calendar, Dumbbell, PlayCircle, ExternalLink, CheckCircle2, Award, Plus } from 'lucide-react';
 import { WORKOUT_PROGRAMS, PROGRAM_CATEGORIES } from '../data/workoutPrograms';
-import { getExerciseById } from '../data/exerciseLibrary';
+import { getExerciseById, getEmbedUrl } from '../data/exerciseLibrary';
 import { todayStr, generateId } from '../data/constants';
 import MuscleDiagram, { MuscleDiagramLegend } from './MuscleDiagram';
 
@@ -26,6 +26,7 @@ export default function WorkoutPrograms({ setWorkouts }) {
   const [selected, setSelected] = useState(null);
   const [category, setCategory] = useState('All');
   const [logged, setLogged] = useState('');
+  const [showVideoFor, setShowVideoFor] = useState({});
 
   const filtered = category === 'All'
     ? WORKOUT_PROGRAMS
@@ -139,10 +140,11 @@ export default function WorkoutPrograms({ setWorkouts }) {
                       <p className="text-xs text-gray-500">{ex.exercise.muscleGroup} · {ex.exercise.equipment}</p>
                     </div>
                   </div>
-                  <a href={ex.exercise.videoUrl} target="_blank" rel="noopener noreferrer"
-                    className="text-red-600 hover:text-red-700 shrink-0" title="Watch demo">
-                    <PlayCircle className="w-6 h-6" />
-                  </a>
+                  <button onClick={() => setShowVideoFor(prev => ({ ...prev, [ex.id]: !prev[ex.id] }))}
+                    className={`shrink-0 flex items-center gap-1 px-2 py-1 rounded text-xs font-medium transition ${showVideoFor[ex.id] ? 'bg-red-100 text-red-700' : 'text-red-600 hover:bg-red-50'}`}>
+                    <PlayCircle className="w-5 h-5" />
+                    {showVideoFor[ex.id] ? 'Hide' : 'Video'}
+                  </button>
                 </div>
                 <div className="flex items-center gap-4 mt-3 text-sm">
                   <div className="bg-blue-50 px-3 py-1 rounded">
@@ -163,6 +165,28 @@ export default function WorkoutPrograms({ setWorkouts }) {
                     <strong>Tip:</strong> {ex.exercise.formCues[0]}
                   </div>
                 )}
+                {showVideoFor[ex.id] && (() => {
+                  const embed = getEmbedUrl(ex.id);
+                  return embed ? (
+                    <div className="mt-3 rounded-lg overflow-hidden border border-gray-200 bg-black">
+                      <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
+                        <iframe
+                          src={embed}
+                          title={`${ex.exercise.name} demo`}
+                          className="absolute inset-0 w-full h-full"
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                          allowFullScreen
+                        />
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="mt-3 text-center text-xs text-gray-400 bg-gray-50 rounded-lg p-4">
+                      <a href={ex.exercise.videoUrl} target="_blank" rel="noopener noreferrer" className="text-red-600 underline">
+                        Watch on YouTube
+                      </a>
+                    </div>
+                  );
+                })()}
               </div>
             ))}
           </div>

@@ -1,8 +1,63 @@
-// Exercise library with instructions, muscle groups, and video demo search links
-// Video URLs use YouTube search for reliability
+// Exercise library with instructions, muscle groups, and embedded YouTube video IDs
 
-function videoSearch(query) {
-  return `https://www.youtube.com/results?search_query=${encodeURIComponent(query + ' proper form tutorial')}`;
+// Map exercise IDs to specific YouTube video IDs for embedding
+const VIDEO_IDS = {
+  'pushup': '_YrJc-kTYA0',
+  'incline-pushup': 'cfns5VDVVvk',
+  'db-bench-press': 'VmB1G1K7v94',
+  'db-flyes': 'QENKPHhQVi4',
+  'decline-pushup': 'SKPab2YC8BE',
+  'db-row': 'roCP6wCXPqo',
+  'pullup': 'ZPG8OsHKXLw',
+  'band-row': 'xNqFDJMnVd0',
+  'db-deadlift': 'vnEANU7BqqY',
+  'superman': 'cZxtPxeR2H8',
+  'db-shoulder-press': 'M2rwvNhTOu0',
+  'lateral-raise': 'PzsMitRdI_8',
+  'front-raise': '-t7fuZ0KhDA',
+  'pike-pushup': 'XckEEwa1BPI',
+  'bicep-curl': 'ykJmrZ5v0Oo',
+  'hammer-curl': 'BRVDS6HVR9Q',
+  'tricep-dip': '6kALZikXxLc',
+  'tricep-extension': '-Vyt2QdsR7E',
+  'close-pushup': 'J0DnG1_S92I',
+  'bw-squat': 'P-yaD24bUE8',
+  'goblet-squat': 'CkFzgR55gho',
+  'lunge': '3TM-vVWuLYE',
+  'bulgarian-split': 'SkNsa3eBwLA',
+  'step-up': '9ZknEYboBOQ',
+  'calf-raise': 'eMTy3qylqnE',
+  'wall-sit': 'aKBxiKs9n8A',
+  'glute-bridge': 'OUgsJ8-Vi0E',
+  'hip-thrust': 'pUdIL5x0fWg',
+  'single-leg-bridge': 'AVAXhy6pl7o',
+  'curtsy-lunge': 'h4TGcZ9GfkM',
+  'plank': 'BQu26ABuVS0',
+  'side-plank': 'N_s9em1xTqU',
+  'dead-bug': 'o4GKiEoYClI',
+  'bird-dog': 'QABW99qPiNM',
+  'bicycle-crunch': '1we3bh9uhqY',
+  'mountain-climber': 'ixxk9Qfn61o',
+  'russian-twist': 'wkD8rjkodUI',
+  'leg-raise': 'l4kQd9eWclE',
+  'burpee': 'G2hv_NYhM-A',
+  'jumping-jack': 'uLVt6u15L98',
+  'high-knees': 'DfjpR6dzLVg',
+  'kb-swing': 'aSYap2yhW8s',
+  'farmer-carry': 'NH7Xv-7NQNQ',
+  'thruster': '-rHJkjHUbmo',
+};
+
+function videoUrl(id) {
+  const videoId = VIDEO_IDS[id];
+  return videoId
+    ? `https://www.youtube.com/watch?v=${videoId}`
+    : `https://www.youtube.com/results?search_query=${encodeURIComponent(id.replace(/-/g, ' ') + ' exercise form')}`;
+}
+
+function embedUrl(id) {
+  const videoId = VIDEO_IDS[id];
+  return videoId ? `https://www.youtube.com/embed/${videoId}` : null;
 }
 
 export const MUSCLE_GROUPS = ['Chest', 'Back', 'Shoulders', 'Arms', 'Legs', 'Core', 'Glutes', 'Full Body', 'Cardio'];
@@ -18,7 +73,7 @@ export const EXERCISES = [
     secondary: ['Shoulders', 'Arms', 'Core'],
     equipment: 'Bodyweight',
     difficulty: 'Beginner',
-    videoUrl: videoSearch('push up'),
+    videoUrl: videoUrl('pushup'),
     instructions: [
       'Start in a high plank position with hands slightly wider than shoulder-width',
       'Keep your body in a straight line from head to heels',
@@ -36,7 +91,7 @@ export const EXERCISES = [
     secondary: ['Shoulders', 'Arms'],
     equipment: 'Bodyweight',
     difficulty: 'Beginner',
-    videoUrl: videoSearch('incline push up'),
+    videoUrl: videoUrl('incline-pushup'),
     instructions: [
       'Place hands on an elevated surface (bench, counter, sturdy chair)',
       'Walk feet back so body forms a straight line at an angle',
@@ -54,7 +109,7 @@ export const EXERCISES = [
     secondary: ['Shoulders', 'Arms'],
     equipment: 'Dumbbells',
     difficulty: 'Intermediate',
-    videoUrl: videoSearch('dumbbell bench press'),
+    videoUrl: videoUrl('db-bench-press'),
     instructions: [
       'Lie flat on a bench holding dumbbells at chest level',
       'Feet planted firmly on the floor',
@@ -72,7 +127,7 @@ export const EXERCISES = [
     secondary: [],
     equipment: 'Dumbbells',
     difficulty: 'Intermediate',
-    videoUrl: videoSearch('dumbbell chest fly'),
+    videoUrl: videoUrl('db-flyes'),
     instructions: [
       'Lie on a bench holding dumbbells directly above chest with slight bend in elbows',
       'Lower dumbbells out to the sides in an arc until you feel a stretch',
@@ -90,7 +145,7 @@ export const EXERCISES = [
     secondary: ['Shoulders', 'Core'],
     equipment: 'Bodyweight',
     difficulty: 'Intermediate',
-    videoUrl: videoSearch('decline push up'),
+    videoUrl: videoUrl('decline-pushup'),
     instructions: [
       'Place feet on an elevated surface (chair, bench)',
       'Hands on the floor shoulder-width apart',
@@ -110,7 +165,7 @@ export const EXERCISES = [
     secondary: ['Arms'],
     equipment: 'Dumbbells',
     difficulty: 'Beginner',
-    videoUrl: videoSearch('single arm dumbbell row'),
+    videoUrl: videoUrl('db-row'),
     instructions: [
       'Place one knee and hand on a bench, other foot on the floor',
       'Hold dumbbell in free hand, arm extended',
@@ -128,7 +183,7 @@ export const EXERCISES = [
     secondary: ['Arms', 'Core'],
     equipment: 'None',
     difficulty: 'Advanced',
-    videoUrl: videoSearch('pull up'),
+    videoUrl: videoUrl('pullup'),
     instructions: [
       'Hang from a bar with hands slightly wider than shoulder-width, palms facing away',
       'Pull yourself up until chin clears the bar',
@@ -145,7 +200,7 @@ export const EXERCISES = [
     secondary: ['Arms'],
     equipment: 'Resistance Band',
     difficulty: 'Beginner',
-    videoUrl: videoSearch('resistance band row'),
+    videoUrl: videoUrl('band-row'),
     instructions: [
       'Anchor band to a sturdy object at chest height',
       'Hold band handles, step back to create tension',
@@ -163,7 +218,7 @@ export const EXERCISES = [
     secondary: ['Glutes', 'Legs'],
     equipment: 'Dumbbells',
     difficulty: 'Intermediate',
-    videoUrl: videoSearch('dumbbell romanian deadlift'),
+    videoUrl: videoUrl('db-deadlift'),
     instructions: [
       'Stand with dumbbells in front of your thighs',
       'Keep back flat, hinge at the hips, slightly bending knees',
@@ -181,7 +236,7 @@ export const EXERCISES = [
     secondary: ['Glutes', 'Core'],
     equipment: 'Bodyweight',
     difficulty: 'Beginner',
-    videoUrl: videoSearch('superman exercise'),
+    videoUrl: videoUrl('superman'),
     instructions: [
       'Lie face down on the floor with arms extended overhead',
       'Simultaneously lift arms, chest, and legs off the ground',
@@ -201,7 +256,7 @@ export const EXERCISES = [
     secondary: ['Arms'],
     equipment: 'Dumbbells',
     difficulty: 'Beginner',
-    videoUrl: videoSearch('dumbbell shoulder press'),
+    videoUrl: videoUrl('db-shoulder-press'),
     instructions: [
       'Sit or stand holding dumbbells at shoulder height, palms facing forward',
       'Press dumbbells up overhead until arms are extended',
@@ -218,7 +273,7 @@ export const EXERCISES = [
     secondary: [],
     equipment: 'Dumbbells',
     difficulty: 'Beginner',
-    videoUrl: videoSearch('dumbbell lateral raise'),
+    videoUrl: videoUrl('lateral-raise'),
     instructions: [
       'Stand with dumbbells at your sides',
       'Keeping a slight bend in elbows, raise arms out to the sides',
@@ -236,7 +291,7 @@ export const EXERCISES = [
     secondary: [],
     equipment: 'Dumbbells',
     difficulty: 'Beginner',
-    videoUrl: videoSearch('dumbbell front raise'),
+    videoUrl: videoUrl('front-raise'),
     instructions: [
       'Stand holding dumbbells in front of thighs, palms facing body',
       'Raise one or both dumbbells straight in front of you to shoulder height',
@@ -253,7 +308,7 @@ export const EXERCISES = [
     secondary: ['Arms'],
     equipment: 'Bodyweight',
     difficulty: 'Intermediate',
-    videoUrl: videoSearch('pike push up'),
+    videoUrl: videoUrl('pike-pushup'),
     instructions: [
       'Start in a downward dog position, hips high',
       'Bend elbows to lower the top of your head toward the floor',
@@ -272,7 +327,7 @@ export const EXERCISES = [
     secondary: [],
     equipment: 'Dumbbells',
     difficulty: 'Beginner',
-    videoUrl: videoSearch('dumbbell bicep curl'),
+    videoUrl: videoUrl('bicep-curl'),
     instructions: [
       'Stand holding dumbbells at your sides, palms facing forward',
       'Curl dumbbells up toward shoulders by bending elbows',
@@ -290,7 +345,7 @@ export const EXERCISES = [
     secondary: [],
     equipment: 'Dumbbells',
     difficulty: 'Beginner',
-    videoUrl: videoSearch('dumbbell hammer curl'),
+    videoUrl: videoUrl('hammer-curl'),
     instructions: [
       'Stand with dumbbells at sides, palms facing your body (thumb up)',
       'Curl dumbbells up keeping palms facing each other',
@@ -308,7 +363,7 @@ export const EXERCISES = [
     secondary: ['Chest', 'Shoulders'],
     equipment: 'Bodyweight',
     difficulty: 'Beginner',
-    videoUrl: videoSearch('tricep dip chair'),
+    videoUrl: videoUrl('tricep-dip'),
     instructions: [
       'Sit on edge of a sturdy chair or bench, hands gripping the edge',
       'Walk feet forward, supporting weight with arms',
@@ -326,7 +381,7 @@ export const EXERCISES = [
     secondary: [],
     equipment: 'Dumbbells',
     difficulty: 'Beginner',
-    videoUrl: videoSearch('overhead tricep extension'),
+    videoUrl: videoUrl('tricep-extension'),
     instructions: [
       'Hold one dumbbell with both hands overhead',
       'Keep upper arms stationary and lower the dumbbell behind your head',
@@ -343,7 +398,7 @@ export const EXERCISES = [
     secondary: ['Chest'],
     equipment: 'Bodyweight',
     difficulty: 'Intermediate',
-    videoUrl: videoSearch('close grip push up diamond'),
+    videoUrl: videoUrl('close-pushup'),
     instructions: [
       'Get into push-up position with hands close together under chest',
       'Lower chest toward your hands, keeping elbows close to body',
@@ -362,7 +417,7 @@ export const EXERCISES = [
     secondary: ['Glutes', 'Core'],
     equipment: 'Bodyweight',
     difficulty: 'Beginner',
-    videoUrl: videoSearch('bodyweight squat'),
+    videoUrl: videoUrl('bw-squat'),
     instructions: [
       'Stand with feet shoulder-width apart, toes slightly out',
       'Lower hips back and down as if sitting in a chair',
@@ -380,7 +435,7 @@ export const EXERCISES = [
     secondary: ['Glutes', 'Core'],
     equipment: 'Dumbbells',
     difficulty: 'Beginner',
-    videoUrl: videoSearch('goblet squat'),
+    videoUrl: videoUrl('goblet-squat'),
     instructions: [
       'Hold a dumbbell vertically at chest level with both hands',
       'Stand with feet shoulder-width apart',
@@ -398,7 +453,7 @@ export const EXERCISES = [
     secondary: ['Glutes'],
     equipment: 'Bodyweight',
     difficulty: 'Beginner',
-    videoUrl: videoSearch('forward lunge'),
+    videoUrl: videoUrl('lunge'),
     instructions: [
       'Stand tall, step forward with one leg',
       'Lower back knee toward the floor',
@@ -416,7 +471,7 @@ export const EXERCISES = [
     secondary: ['Glutes'],
     equipment: 'Bodyweight',
     difficulty: 'Intermediate',
-    videoUrl: videoSearch('bulgarian split squat'),
+    videoUrl: videoUrl('bulgarian-split'),
     instructions: [
       'Place one foot on a bench behind you, other foot forward',
       'Lower back knee toward the floor',
@@ -433,7 +488,7 @@ export const EXERCISES = [
     secondary: ['Glutes'],
     equipment: 'Bodyweight',
     difficulty: 'Beginner',
-    videoUrl: videoSearch('step up exercise'),
+    videoUrl: videoUrl('step-up'),
     instructions: [
       'Stand in front of a sturdy bench or step',
       'Step up with one foot, driving through the heel',
@@ -451,7 +506,7 @@ export const EXERCISES = [
     secondary: [],
     equipment: 'Bodyweight',
     difficulty: 'Beginner',
-    videoUrl: videoSearch('calf raise'),
+    videoUrl: videoUrl('calf-raise'),
     instructions: [
       'Stand with feet flat on the ground (or on edge of a step for more range)',
       'Push up onto the balls of your feet',
@@ -469,7 +524,7 @@ export const EXERCISES = [
     secondary: ['Core'],
     equipment: 'Bodyweight',
     difficulty: 'Beginner',
-    videoUrl: videoSearch('wall sit exercise'),
+    videoUrl: videoUrl('wall-sit'),
     instructions: [
       'Lean back against a wall',
       'Slide down until thighs are parallel to the floor',
@@ -488,7 +543,7 @@ export const EXERCISES = [
     secondary: ['Core'],
     equipment: 'Bodyweight',
     difficulty: 'Beginner',
-    videoUrl: videoSearch('glute bridge'),
+    videoUrl: videoUrl('glute-bridge'),
     instructions: [
       'Lie on back with knees bent, feet flat on floor',
       'Drive through heels to lift hips up',
@@ -506,7 +561,7 @@ export const EXERCISES = [
     secondary: [],
     equipment: 'Dumbbells',
     difficulty: 'Intermediate',
-    videoUrl: videoSearch('dumbbell hip thrust'),
+    videoUrl: videoUrl('hip-thrust'),
     instructions: [
       'Sit with upper back against a bench, dumbbell across hips',
       'Feet flat on floor, knees bent',
@@ -524,7 +579,7 @@ export const EXERCISES = [
     secondary: ['Core'],
     equipment: 'Bodyweight',
     difficulty: 'Intermediate',
-    videoUrl: videoSearch('single leg glute bridge'),
+    videoUrl: videoUrl('single-leg-bridge'),
     instructions: [
       'Lie on back with one knee bent, other leg extended',
       'Drive through the planted heel to raise hips',
@@ -542,7 +597,7 @@ export const EXERCISES = [
     secondary: ['Legs'],
     equipment: 'Bodyweight',
     difficulty: 'Beginner',
-    videoUrl: videoSearch('curtsy lunge'),
+    videoUrl: videoUrl('curtsy-lunge'),
     instructions: [
       'Stand with feet hip-width apart',
       'Step one foot diagonally behind the other, like a curtsy',
@@ -562,7 +617,7 @@ export const EXERCISES = [
     secondary: ['Shoulders'],
     equipment: 'Bodyweight',
     difficulty: 'Beginner',
-    videoUrl: videoSearch('plank exercise'),
+    videoUrl: videoUrl('plank'),
     instructions: [
       'Get into forearm plank position, forearms flat, elbows under shoulders',
       'Keep body in a straight line from head to heels',
@@ -579,7 +634,7 @@ export const EXERCISES = [
     secondary: ['Shoulders'],
     equipment: 'Bodyweight',
     difficulty: 'Beginner',
-    videoUrl: videoSearch('side plank'),
+    videoUrl: videoUrl('side-plank'),
     instructions: [
       'Lie on side, propped up on forearm, elbow under shoulder',
       'Lift hips so body forms a straight line',
@@ -596,7 +651,7 @@ export const EXERCISES = [
     secondary: [],
     equipment: 'Bodyweight',
     difficulty: 'Beginner',
-    videoUrl: videoSearch('dead bug exercise'),
+    videoUrl: videoUrl('dead-bug'),
     instructions: [
       'Lie on back with arms pointing up and knees bent at 90 degrees',
       'Slowly lower opposite arm and leg toward the floor',
@@ -613,7 +668,7 @@ export const EXERCISES = [
     secondary: ['Back', 'Glutes'],
     equipment: 'Bodyweight',
     difficulty: 'Beginner',
-    videoUrl: videoSearch('bird dog exercise'),
+    videoUrl: videoUrl('bird-dog'),
     instructions: [
       'Start on hands and knees (tabletop position)',
       'Extend opposite arm and leg',
@@ -630,7 +685,7 @@ export const EXERCISES = [
     secondary: [],
     equipment: 'Bodyweight',
     difficulty: 'Beginner',
-    videoUrl: videoSearch('bicycle crunch'),
+    videoUrl: videoUrl('bicycle-crunch'),
     instructions: [
       'Lie on back with hands behind head, legs raised',
       'Bring one knee toward chest while rotating opposite elbow toward it',
@@ -647,7 +702,7 @@ export const EXERCISES = [
     secondary: ['Cardio', 'Shoulders'],
     equipment: 'Bodyweight',
     difficulty: 'Beginner',
-    videoUrl: videoSearch('mountain climber'),
+    videoUrl: videoUrl('mountain-climber'),
     instructions: [
       'Start in a high plank position',
       'Drive one knee toward chest',
@@ -664,7 +719,7 @@ export const EXERCISES = [
     secondary: [],
     equipment: 'Bodyweight',
     difficulty: 'Intermediate',
-    videoUrl: videoSearch('russian twist'),
+    videoUrl: videoUrl('russian-twist'),
     instructions: [
       'Sit with knees bent, lean back slightly, lift feet off floor (optional)',
       'Hold hands together or hold a weight',
@@ -681,7 +736,7 @@ export const EXERCISES = [
     secondary: [],
     equipment: 'Bodyweight',
     difficulty: 'Intermediate',
-    videoUrl: videoSearch('lying leg raise'),
+    videoUrl: videoUrl('leg-raise'),
     instructions: [
       'Lie on back with legs straight',
       'Keeping legs straight, raise them until perpendicular to floor',
@@ -700,7 +755,7 @@ export const EXERCISES = [
     secondary: ['Cardio'],
     equipment: 'Bodyweight',
     difficulty: 'Intermediate',
-    videoUrl: videoSearch('burpee exercise'),
+    videoUrl: videoUrl('burpee'),
     instructions: [
       'Start standing, drop into a squat with hands on the floor',
       'Kick feet back into a plank position',
@@ -718,7 +773,7 @@ export const EXERCISES = [
     secondary: ['Full Body'],
     equipment: 'Bodyweight',
     difficulty: 'Beginner',
-    videoUrl: videoSearch('jumping jacks'),
+    videoUrl: videoUrl('jumping-jack'),
     instructions: [
       'Start with feet together, arms at sides',
       'Jump feet wide while raising arms overhead',
@@ -735,7 +790,7 @@ export const EXERCISES = [
     secondary: ['Legs', 'Core'],
     equipment: 'Bodyweight',
     difficulty: 'Beginner',
-    videoUrl: videoSearch('high knees exercise'),
+    videoUrl: videoUrl('high-knees'),
     instructions: [
       'Stand with feet hip-width apart',
       'Run in place, bringing knees up to hip level',
@@ -752,7 +807,7 @@ export const EXERCISES = [
     secondary: ['Glutes', 'Back'],
     equipment: 'Kettlebell',
     difficulty: 'Intermediate',
-    videoUrl: videoSearch('kettlebell swing'),
+    videoUrl: videoUrl('kb-swing'),
     instructions: [
       'Stand with feet shoulder-width apart, kettlebell on floor in front',
       'Hinge at hips, grab kettlebell with both hands',
@@ -770,7 +825,7 @@ export const EXERCISES = [
     secondary: ['Core', 'Arms', 'Back'],
     equipment: 'Dumbbells',
     difficulty: 'Beginner',
-    videoUrl: videoSearch('farmers carry'),
+    videoUrl: videoUrl('farmer-carry'),
     instructions: [
       'Hold heavy dumbbells at your sides',
       'Stand tall with shoulders back',
@@ -787,7 +842,7 @@ export const EXERCISES = [
     secondary: ['Legs', 'Shoulders'],
     equipment: 'Dumbbells',
     difficulty: 'Intermediate',
-    videoUrl: videoSearch('dumbbell thruster'),
+    videoUrl: videoUrl('thruster'),
     instructions: [
       'Hold dumbbells at shoulders, feet shoulder-width apart',
       'Squat down keeping dumbbells at shoulders',
@@ -798,6 +853,11 @@ export const EXERCISES = [
     reps: '10-12',
   },
 ];
+
+export function getEmbedUrl(exerciseId) {
+  const videoId = VIDEO_IDS[exerciseId];
+  return videoId ? `https://www.youtube.com/embed/${videoId}` : null;
+}
 
 export function getExercisesByMuscle(muscle) {
   return EXERCISES.filter(e => e.muscleGroup === muscle || e.secondary?.includes(muscle));
